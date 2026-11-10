@@ -38,6 +38,13 @@ try {
   await page.locator('#post-search').fill('sauce');
   assert.equal(await page.locator('.timeline-post').count(),1);
   await page.locator('#reset').click();
+  await page.locator('.paste summary').click();
+  await page.locator('#pasted').fill('2021-01-01: PASTED_PRIVATE_MARKER <img src=x onerror=alert(1)> garden');
+  await page.locator('#analyze-paste').click();
+  await page.locator('#reset').waitFor();
+  assert.match(await page.locator('#post-results').innerText(),/PASTED_PRIVATE_MARKER/);
+  assert.equal(await page.locator('.timeline-post img').count(),0);
+  await page.locator('#reset').click();
   await page.locator('#file').setInputFiles({name:'facebook-qa.zip',mimeType:'application/zip',buffer:payload});
   await page.locator('#reset').waitFor();
   assert.equal(await page.locator('.timeline-post').count(),2);
