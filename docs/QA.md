@@ -21,7 +21,7 @@ The Node test suite passes **30 tests**, covering:
 
 Covered flows: demo loading, year/search filters, pasted text, worker ZIP import, message exclusion, HTML rendered as text, aggregate-only share caption, PNG download signature, private-export confirmation cancellation, valid AI response display, clear/reload, horizontal overflow, and absence of unexpected external HTTP requests. Fixtures are synthetic and kept in memory.
 
-GitHub Actions run 42917545174 passed the desktop and iPhone 13 Chromium suite against application commit e11ae372cecd870766ef548256eb1a706759d384. A subsequent test-only addition also exercises pasted-text HTML rendering; the final workflow will rerun the full suite before redeployment.
+GitHub Actions run 42917545174 passed the desktop and iPhone 13 Chromium suite against application commit e11ae372cecd870766ef548256eb1a706759d384. Final run 42917745659 also passed the added pasted-text HTML regression on desktop and iPhone Chromium, and its Pages deployment succeeded.
 
 ## Repairs found in independent review
 
@@ -50,6 +50,8 @@ GitHub Pages source is configured to GitHub Actions. Run 42917545174 passed 30 u
 
 Direct browser testing also verified demo year/search filtering, invalid AI JSON rejection, literal rendering of pasted HTML (zero created image elements), and aggregate share text excluding the pasted post.
 
-Intended public app: https://jalapenoseed.github.io/20-years-of-me/
+Verified public app: https://jalapenoseed.github.io/20-years-of-me/
+
+The public app was opened and its fictional demo generated 26 timeline posts and an aggregate-only share preview successfully. Both verification and deployment jobs in final run 42917745659 completed successfully. Application assets are identical between the two verified release commits.
 
 HTML5 release ZIP is prepared; itch.io publication has not been performed. Physical iOS Safari and actual Facebook native sharing remain unverified.
