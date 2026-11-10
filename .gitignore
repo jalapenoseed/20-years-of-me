@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.env
+.DS_Store
+releases/
+playwright-report/
+test-results/
+*.private.json
+*.facebook.zip

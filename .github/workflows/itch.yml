@@ -1,0 +1,42 @@
+name: Publish HTML5 build to itch.io
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: Existing itch.io project (owner/project)
+        required: true
+        default: jalapenoseed/20-years-of-me
+permissions:
+  contents: read
+concurrency:
+  group: itch-release
+  cancel-in-progress: false
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment: itch-release
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - run: npm run verify
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:browser
+      - name: Install official itch.io Butler CLI
+        run: |
+          curl --fail --location --retry 3 https://broth.itch.zone/butler/linux-amd64/LATEST/archive/default -o "$RUNNER_TEMP/butler.zip"
+          mkdir -p "$RUNNER_TEMP/butler"
+          unzip -q "$RUNNER_TEMP/butler.zip" -d "$RUNNER_TEMP/butler"
+          chmod +x "$RUNNER_TEMP/butler/butler"
+          "$RUNNER_TEMP/butler/butler" -V
+      - name: Upload verified HTML5 directory
+        env:
+          BUTLER_API_KEY: ${{ secrets.BUTLER_API_KEY }}
+          ITCH_TARGET: ${{ inputs.target }}
+        run: |
+          test -n "$BUTLER_API_KEY" || { echo 'Add the BUTLER_API_KEY repository secret first.'; exit 1; }
+          [[ "$ITCH_TARGET" =~ ^[a-zA-Z0-9_-]+/[a-zA-Z0-9_-]+$ ]] || { echo 'Invalid itch.io target.'; exit 1; }
+          "$RUNNER_TEMP/butler/butler" push dist "$ITCH_TARGET:html5" --userversion "0.2.0-${GITHUB_SHA::7}"

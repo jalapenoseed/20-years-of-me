@@ -1,0 +1,22 @@
+{
+  "name": "facebook-autopsy",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "node scripts/serve.js",
+    "preview": "node scripts/serve.js --dist",
+    "build": "node scripts/build.js",
+    "test": "node --test",
+    "test:browser": "node tests/browser-smoke.mjs",
+    "check:build": "node scripts/check-build.js",
+    "verify": "npm test && npm run build && npm run check:build",
+    "release": "npm run verify && python3 scripts/package-release.py"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.65.0"
+  }
+}
